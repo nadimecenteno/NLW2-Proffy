@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt_br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proffy | Sua plataforma de estudos online</title>
+
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="stylesheet" href="/styles/partials/header.css"> <!--css do cabeçalho-->
+    <link rel="stylesheet" href="/styles/partials/forms.css">
+    <link rel="stylesheet" href="/styles/partials/page-give-classes.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet">
+
+    <script src="/scripts/addField.js" defer></script> <!--defer indica que o html deve ler esse script depois de um tempo, para que carregue o js carregue após o html-->
+</head>
+
+<body id="page-give-classes">
+
+    <div id="container">
+        <header class="page-header">
+            <div class="top-bar-container">
+                <a href="/">
+                    <img src="/images/icons/back.svg" alt="Voltar">
+                </a>
+                <img src="/images/logo.svg" alt="Proffy">
+            </div>
+
+            <div class="header-content">
+                <strong>Que incrível que você quer dar aulas</strong> <!--tag strong é o texto com fonte em negrito-->
+                <p>O primeiro passo, é preencher esse formulário de inscrição</p>
+            </div>
+        </header>
+
+        <main>
+            <form action="/save-classes" id="create-class" method="POST"> <!--mudou o method para POST, por conta do req.body, para a url não ficar mostrando os dados do formulário ao enviar-->
+                <fieldset> <!--tag que faz o agrupamento de dados em um formulário form do html-->
+                    <legend>Seus dados</legend>
+
+                    <div class="input-block">
+                        <label for="name">Nome completo</label>
+                        <input name="name" id="name" required>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="avatar">Link da sua foto <small>(comece com https://)</small></label>
+                        <input name="avatar" id="avatar" type="url" required>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="whatsapp">Whatsapp <small>(somente números)</small></label>
+                        <input name="whatsapp" id="whatsapp" type="number" required>
+                    </div>
+
+                    <div class="textarea-block">
+                        <label for="bio">Biografia</label>
+                        <textarea name="bio" id="bio" required></textarea> <!--a tag textarea deve fechar na mesma linha que abre. caso contrário, no momento de uso o cursor da digitação não fica posicionado no início da caixa de texto-->
+                    </div>
+
+                </fieldset>
+
+                <fieldset>
+                    <legend>Sobre a aula</legend>
+                    <div class="select-block">
+                        <label for="subject">Matéria</label>
+                        <select name="subject" id="subject" required>
+                            <option value="">Selecione uma opção</option>
+
+                            {%for subject in subjects %}
+                            <!--atributo loop.index é uma variável do nunjucks que indica o índice do for que está rodando. o loop.index começa do 1-->
+                                <option value="{{loop.index}}">{{subject}}</option>
+                            {%endfor%}
+
+                        </select>
+                    </div>
+
+                    <div class="input-block">
+                        <label for="cost">Custo da sua hora/aula <small>(R$)</small></label>
+                        <input type="number" name="cost" id="cost" required>
+                    </div>
+                </fieldset>
+
+                <fieldset id="schedule-items">
+                    <legend>Horários disponíveis
+                        <button type="button" id="add-time">+ Novo Horário</button>
+                    </legend>
+
+                    <div class="schedule-item">
+                        <div class="select-block">
+                            <label for="weekday">Dia da semana</label>
+                            <select name="weekday[]" required> <!--name="weekday[]" os [] indica que o campo receberá um array de valores. Nesse caso, está agrupando pois, no back-end, esse campo de weekday será duplicado, quando o usuário clicar em "+novo horário". Assim, tirou o id pela necessidade dele ser único na página. o que não acontecerá no caso de ser duplicado!!-->
+                                <option value="">Selecione uma opção</option>
+                                
+                                {%for weekday in weekdays %}
+                                    <option value="{{loop.index0}}">{{weekday}}</option>
+                                {%endfor%}
+                            </select>
+                        </div>
+
+                        <div class="input-block">
+                            <label for="time_from">Das</label>
+                            <input type="time" name="time_from[]" required>
+                        </div>
+
+                        <div class="input-block">
+                            <label for="time_to">Até</label>
+                            <input type="time" name="time_to[]" required>
+                        </div>
+
+                    </div>
+                    
+                </fieldset>
+            </form>
+
+            <footer>
+                <p>
+                    <img src="/images/icons/warning.svg" alt="Aviso importante">
+                    Importante! <br> Preencha todos os dados
+                </p>
+                <button type="submit" form="create-class">Salvar cadastro</button> <!--foi colocado o atributo form="create-class", pois esse butão é o submit do formulário, entretanto, não está dentro dele. assim, coloca-se um id na tag form (do formulário a ser enviado), e esse respectivo atributo (form="create-class") no button, onde create-class é o id do form-->
+            </footer>
+        </main>
+    </div>
+
+</body>
+</html>
